@@ -11,6 +11,18 @@ headers = {
 'authorization': "Bearer pzSBkPRXCSnVAHgDo49RNMAiymCWupi9-DE723hfZr29Dd1eN9i3J5UTzrwlNN2tp9ByGht-gbVnsm1tXXibgVQUygiKFCocIiGFqEvBJNdGQsLiUJCNY2oRi-pSXXYx",
 'cache-control': "no-cache",
 }
+
+def get_mobile_site(url):
+	# Gets the URL from Yelp
+	headers = { 'User-Agent' : 'Mozilla/5.0 (iPhone; CPU iPhone OS 9_1 like Mac OS X) AppleWebKit/601.1.46 (KHTML, like Gecko) Version/9.0 Mobile/13B137 Safari/601.1'}
+	for i in range(3):
+		try:
+			res = requests.get(url, headers=headers)
+			if res.status_code == 200:
+				return res
+		except:
+			pass
+
 #need the following parameters (type dict) to perform business search. 
 #params = {'name':'walmart supercenter', 'address1':'406 S Walton Blvd', 'city':'bentonville', 'state':'ar', 'country':'US'}
 params = {'term':'grocery', 'location':'bentonville ar'}
