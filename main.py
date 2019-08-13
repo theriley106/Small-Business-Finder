@@ -50,13 +50,15 @@ res = requests.get("https://api.yelp.com/v3/businesses/search", headers=headers,
 data = res.json()
 print json.dumps(data["businesses"], indent=4)
 a = []
-#raw_input("AYY")
+# Iterate over all of the results for this search
 for val in data["businesses"]:
+	# Replace the URL with a valid mobile URL
 	url = val['url'].replace("https://www.yelp.com", "https://m.yelp.com")
-	headers = {'User-Agent': 'Mozilla/5.0 (Macintosh; Intel Mac OS X 10_10_1) AppleWebKit/537.36 (KHTML, like Gecko) Chrome/39.0.2171.95 Safari/537.36'}
-	headers = { 'User-Agent' : 'Mozilla/5.0 (iPhone; CPU iPhone OS 9_1 like Mac OS X) AppleWebKit/601.1.46 (KHTML, like Gecko) Version/9.0 Mobile/13B137 Safari/601.1'}
-	res = requests.get(url, headers=headers)
+	# Grab the site using mobile headers | yelp will redirect if not
+	res = get_mobile_site(url)
+	# Parse the mobile site as a bs4 object
 	page = bs4.BeautifulSoup(res.text, 'lxml')
+	# Select the "website" button src
 	buttonInfo = page.select(".js-external-link-action-button")
 	val['hasWebsite'] = len(buttonInfo) != 0
 	if len(buttonInfo) == 0:
