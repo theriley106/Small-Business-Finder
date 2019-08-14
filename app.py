@@ -3,8 +3,13 @@ from flask import Flask, render_template, request, url_for, redirect, Markup, js
 app = Flask(__name__, static_url_path='/static')
 
 
-@app.route('/', methods=['GET'])
-def index():
+@app.route('/generate', methods=['POST'])
+def generate():
+	print(request.data)
+	return "true"
+
+@app.route('/download', methods=['GET'])
+def download():
 	with open("addresses.csv") as fp:
 		csv = fp.read()
 	#csv = '1,2,3\n4,5,6\n'

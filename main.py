@@ -41,51 +41,54 @@ def get_desktop_site(url):
 
 #need the following parameters (type dict) to perform business search. 
 #params = {'name':'walmart supercenter', 'address1':'406 S Walton Blvd', 'city':'bentonville', 'state':'ar', 'country':'US'}
-params = {'term':'mechanics', 'location':'bentonville ar'}
 
-#param_string = urllib.parse.urlencode(params)
-#conn = http.client.HTTPSConnection("api.yelp.com")
-x = "address1="
-#res = requests.get("https://api.yelp.com/v3/businesses/matches/best?", headers=headers, params=params)
-res = requests.get("https://api.yelp.com/v3/businesses/search", headers=headers, params=params)
 
-#res = conn.getresponse()
-#data = res.read()
-#data = json.loads(data.decode("utf-8"))
-data = res.json()
-print json.dumps(data["businesses"], indent=4)
-a = []
-# Iterate over all of the results for this search
+def search(term, threadCount, location):
+	params = {'term':term, 'location':location}
 
-results = data["businesses"]
-print(len(results))
+	#param_string = urllib.parse.urlencode(params)
+	#conn = http.client.HTTPSConnection("api.yelp.com")
+	x = "address1="
+	#res = requests.get("https://api.yelp.com/v3/businesses/matches/best?", headers=headers, params=params)
+	res = requests.get("https://api.yelp.com/v3/businesses/search", headers=headers, params=params)
 
-listOfPins = chunks(results, int(len(results)/10))
-#print len(list(listOfPins))
-raw_input(" ")
+	#res = conn.getresponse()
+	#data = res.read()
+	#data = json.loads(data.decode("utf-8"))
+	data = res.json()
+	print json.dumps(data, indent=4)
+	#raw_input("CONTINUE")
+	a = []
+	# Iterate over all of the results for this search
 
-def process(listOfResults):
-	for val in listOfResults:
-		# Replace the URL with a valid mobile URL
-		url = val['url'].replace("https://www.yelp.com", "https://m.yelp.com")
-		# Grab the site using mobile headers | yelp will redirect if not
-		res = get_mobile_site(url)
-		# Parse the mobile site as a bs4 object
-		page = bs4.BeautifulSoup(res.text, 'lxml')
-		# Select the "website" button src
-		buttonInfo = page.select(".js-external-link-action-button")
-		val['hasWebsite'] = len(buttonInfo) != 0
-		if len(buttonInfo) == 0:
-			val['website'] = None
-		else:
-			val['website'] = urllib.unquote(str(buttonInfo).partition('" href="')[2].partition('"')[0]).partition('&amp')[0].partition('?url=')[2]
-		a.append(val)
-		print val['website']
+	results = data["businesses"]
+	#print(len(results))
 
-threads = [threading.Thread(target=process, args=(ar,)) for ar in listOfPins]
+	listOfPins = chunks(results, int(len(results)/threadCount))
+	#print len(list(listOfPins))
 
-for thread in threads:
-	thread.start()
-for thread in threads:
-	thread.join()
-print a
+	def process(listOfResults):
+		for val in listOfResults:
+			# Replace the URL with a valid mobile URL
+			url = val['url'].replace("https://www.yelp.com", "https://m.yelp.com")
+			# Grab the site using mobile headers | yelp will redirect if not
+			res = get_mobile_site(url)
+			# Parse the mobile site as a bs4 object
+			page = bs4.BeautifulSoup(res.text, 'lxml')
+			# Select the "website" button src
+			buttonInfo = page.select(".js-external-link-action-button")
+			val['hasWebsite'] = len(buttonInfo) != 0
+			if len(buttonInfo) == 0:
+				val['website'] = None
+			else:
+				val['website'] = urllib.unquote(str(buttonInfo).partition('" href="')[2].partition('"')[0]).partition('&amp')[0].partition('?url=')[2]
+			a.append(val)
+			print val['website']
+
+	threads = [threading.Thread(target=process, args=(ar,)) for ar in listOfPins]
+
+	for thread in threads:
+		thread.start()
+	for thread in threads:
+		thread.join()
+	return a
