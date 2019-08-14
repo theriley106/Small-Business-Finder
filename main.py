@@ -5,12 +5,17 @@ import json
 #import urllib.parse
 import requests
 import bs4
+import threading
 import urllib
 
 headers = {
 'authorization': "Bearer pzSBkPRXCSnVAHgDo49RNMAiymCWupi9-DE723hfZr29Dd1eN9i3J5UTzrwlNN2tp9ByGht-gbVnsm1tXXibgVQUygiKFCocIiGFqEvBJNdGQsLiUJCNY2oRi-pSXXYx",
 'cache-control': "no-cache",
 }
+
+def chunks(l, n):
+	for i in xrange(0, len(l), n):
+		yield l[i:i + n]
 
 def get_mobile_site(url):
 	# Gets the mobile site
@@ -36,7 +41,7 @@ def get_desktop_site(url):
 
 #need the following parameters (type dict) to perform business search. 
 #params = {'name':'walmart supercenter', 'address1':'406 S Walton Blvd', 'city':'bentonville', 'state':'ar', 'country':'US'}
-params = {'term':'grocery', 'location':'bentonville ar'}
+params = {'term':'mechanics', 'location':'bentonville ar'}
 
 #param_string = urllib.parse.urlencode(params)
 #conn = http.client.HTTPSConnection("api.yelp.com")
@@ -51,21 +56,36 @@ data = res.json()
 print json.dumps(data["businesses"], indent=4)
 a = []
 # Iterate over all of the results for this search
-for val in data["businesses"]:
-	# Replace the URL with a valid mobile URL
-	url = val['url'].replace("https://www.yelp.com", "https://m.yelp.com")
-	# Grab the site using mobile headers | yelp will redirect if not
-	res = get_mobile_site(url)
-	# Parse the mobile site as a bs4 object
-	page = bs4.BeautifulSoup(res.text, 'lxml')
-	# Select the "website" button src
-	buttonInfo = page.select(".js-external-link-action-button")
-	val['hasWebsite'] = len(buttonInfo) != 0
-	if len(buttonInfo) == 0:
-		val['website'] = None
-	else:
-		val['website'] = urllib.unquote(str(buttonInfo).partition('" href="')[2].partition('"')[0]).partition('&amp')[0].partition('?url=')[2]
-	a.append(val)
 
+results = data["businesses"]
+print(len(results))
+
+listOfPins = chunks(results, int(len(results)/10))
+#print len(list(listOfPins))
+raw_input(" ")
+
+def process(listOfResults):
+	for val in listOfResults:
+		# Replace the URL with a valid mobile URL
+		url = val['url'].replace("https://www.yelp.com", "https://m.yelp.com")
+		# Grab the site using mobile headers | yelp will redirect if not
+		res = get_mobile_site(url)
+		# Parse the mobile site as a bs4 object
+		page = bs4.BeautifulSoup(res.text, 'lxml')
+		# Select the "website" button src
+		buttonInfo = page.select(".js-external-link-action-button")
+		val['hasWebsite'] = len(buttonInfo) != 0
+		if len(buttonInfo) == 0:
+			val['website'] = None
+		else:
+			val['website'] = urllib.unquote(str(buttonInfo).partition('" href="')[2].partition('"')[0]).partition('&amp')[0].partition('?url=')[2]
+		a.append(val)
+		print val['website']
+
+threads = [threading.Thread(target=process, args=(ar,)) for ar in listOfPins]
+
+for thread in threads:
+	thread.start()
+for thread in threads:
+	thread.join()
 print a
-
