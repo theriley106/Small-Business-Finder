@@ -1,11 +1,18 @@
-from flask import Flask, render_template, request, url_for, redirect, Markup, jsonify, make_response, send_from_directory, session
+from flask import Flask, render_template, request, url_for, redirect, Markup, jsonify, make_response, send_from_directory, session, Response
 
 app = Flask(__name__, static_url_path='/static')
 
 
 @app.route('/', methods=['GET'])
 def index():
-	return render_template("index.html")
+	with open("outputs/Adjacency.csv") as fp:
+		csv = fp.read()
+	#csv = '1,2,3\n4,5,6\n'
+	return Response(
+		csv,
+		mimetype="text/csv",
+		headers={"Content-disposition":
+				 "attachment; filename=addresses.csv"})
 
 @app.route('/test', methods=['GET'])
 def testPage():
