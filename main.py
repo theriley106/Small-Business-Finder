@@ -19,11 +19,7 @@ def chunks(l, n):
 		yield l[i:i + n]
 
 def set_api_key(apiKey):
-	headers['authorization'] = apiKey
-	return headers
-
-def print_headers():
-	print headers
+	headers['authorization'] = "Bearer " + apiKey
 
 def get_mobile_site(url):
 	# Gets the mobile site
