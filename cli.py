@@ -1,4 +1,20 @@
 import main
+from argparse import ArgumentParser
+
+parser = ArgumentParser()
+
+parser.add_argument("-key", "--key", dest="apiKey",
+                    help="Input Yelp fusion api key")
+
+
+args = parser.parse_args()
+
+if args.apiKey == None:
+	apiKey = raw_input("Yelp API Key: ")
+else:
+	apiKey = args.apiKey
+
+main.set_api_key(apiKey)
 
 if __name__ == '__main__':
 	print """
