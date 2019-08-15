@@ -7,6 +7,7 @@ import requests
 import bs4
 import threading
 import urllib
+import csv
 
 headers = {
 'authorization': "Bearer pzSBkPRXCSnVAHgDo49RNMAiymCWupi9-DE723hfZr29Dd1eN9i3J5UTzrwlNN2tp9ByGht-gbVnsm1tXXibgVQUygiKFCocIiGFqEvBJNdGQsLiUJCNY2oRi-pSXXYx",
@@ -43,7 +44,7 @@ def get_desktop_site(url):
 #params = {'name':'walmart supercenter', 'address1':'406 S Walton Blvd', 'city':'bentonville', 'state':'ar', 'country':'US'}
 
 
-def search(term, threadCount, location):
+def search(term, threadCount, location, saveAs="file.csv"):
 	params = {'term':term, 'location':location}
 
 	#param_string = urllib.parse.urlencode(params)
@@ -56,7 +57,7 @@ def search(term, threadCount, location):
 	#data = res.read()
 	#data = json.loads(data.decode("utf-8"))
 	data = res.json()
-	print json.dumps(data, indent=4)
+	#print json.dumps(data, indent=4)
 	#raw_input("CONTINUE")
 	a = []
 	# Iterate over all of the results for this search
@@ -83,7 +84,13 @@ def search(term, threadCount, location):
 			else:
 				val['website'] = urllib.unquote(str(buttonInfo).partition('" href="')[2].partition('"')[0]).partition('&amp')[0].partition('?url=')[2]
 			a.append(val)
-			print val['website']
+			#print val.keys()
+			if val['hasWebsite'] == False:
+				phone = val['display_phone']
+				if len(phone) < 2:
+					phone = "NO PHONE NUMBER"
+				print("{} | {}".format(val['name'],  phone))
+			#print val['website']
 
 	threads = [threading.Thread(target=process, args=(ar,)) for ar in listOfPins]
 
@@ -91,4 +98,13 @@ def search(term, threadCount, location):
 		thread.start()
 	for thread in threads:
 		thread.join()
+	if saveAs != None:
+		if len(a) > 0:
+			g = a[0].keys()
+			new = [g]
+			for val in a:
+				new.append([val.get(v, "") for v in g])
+			with open(saveAs, "wb") as f:
+				writer = csv.writer(f)
+				writer.writerows(new)
 	return a
