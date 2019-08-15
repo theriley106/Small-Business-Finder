@@ -18,6 +18,13 @@ def chunks(l, n):
 	for i in xrange(0, len(l), n):
 		yield l[i:i + n]
 
+def set_api_key(apiKey):
+	headers['authorization'] = apiKey
+	return headers
+
+def print_headers():
+	print headers
+
 def get_mobile_site(url):
 	# Gets the mobile site
 	headers = { 'User-Agent' : 'Mozilla/5.0 (iPhone; CPU iPhone OS 9_1 like Mac OS X) AppleWebKit/601.1.46 (KHTML, like Gecko) Version/9.0 Mobile/13B137 Safari/601.1'}
