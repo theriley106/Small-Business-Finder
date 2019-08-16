@@ -18,4 +18,6 @@ or
 ``` {.sourceCode .bash}
 $ git clone https://github.com/theriley106/SmallBusinessFinder
 $ pip install -r requirements.txt
+$ python main.py
+Input Yelp API Key:
 ```
