@@ -1,5 +1,3 @@
-#Finding reviews for a particular restaurant
-#import http.client
 import json
 #import urllib
 #import urllib.parse
@@ -10,7 +8,7 @@ import urllib
 import csv
 
 headers = {
-'authorization': "Bearer pzSBkPRXCSnVAHgDo49RNMAiymCWupi9-DE723hfZr29Dd1eN9i3J5UTzrwlNN2tp9ByGht-gbVnsm1tXXibgVQUygiKFCocIiGFqEvBJNdGQsLiUJCNY2oRi-pSXXYx",
+'authorization': None,
 'cache-control': "no-cache",
 }
 
@@ -42,7 +40,7 @@ def get_desktop_site(url):
 				return res
 		except:
 			pass
-
+ 
 #need the following parameters (type dict) to perform business search. 
 #params = {'name':'walmart supercenter', 'address1':'406 S Walton Blvd', 'city':'bentonville', 'state':'ar', 'country':'US'}
 
