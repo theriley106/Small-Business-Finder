@@ -1,2 +1,7 @@
-# Small-Business-Finder
-Using the Yelp API to find local businesses without an online presense
+<p align="center">
+  <img src="static/yelp.png" width="500px"/>
+  <h3>Using the Yelp Fusion API to find local businesses without an online presense</h3>
+</p>
+
+
+
