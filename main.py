@@ -38,6 +38,7 @@ def chunks(l, n):
 		yield l[i:i + n]
 
 def get_mobile_site(url):
+	log("Getting URL: {}".format(url))
 	# Gets the mobile site
 	headers = { 'User-Agent' : 'Mozilla/5.0 (iPhone; CPU iPhone OS 9_1 like Mac OS X) AppleWebKit/601.1.46 (KHTML, like Gecko) Version/9.0 Mobile/13B137 Safari/601.1'}
 	for i in range(3):
@@ -45,8 +46,9 @@ def get_mobile_site(url):
 			res = requests.get(url, headers=headers, timeout=10)
 			if res.status_code == 200:
 				return res
-		except:
-			pass
+		except Exception as exp:
+			log("Network Call Failed #{} | URL: {} | Exception: {}".format(i, url, exp))
+	log("Final Network Call Failed: {}".format(url))
 
 def get_desktop_site(url):
 	# Gets the desktop site
@@ -56,8 +58,9 @@ def get_desktop_site(url):
 			res = requests.get(url, headers=headers, timeout=10)
 			if res.status_code == 200:
 				return res
-		except:
-			pass
+		except Exception as exp:
+			log("Network Call Failed #{} | URL: {} | Exception: {}".format(i, url, exp))
+	log("Final Network Call Failed: {}".format(url))
  
 #need the following parameters (type dict) to perform business search. 
 #params = {'name':'walmart supercenter', 'address1':'406 S Walton Blvd', 'city':'bentonville', 'state':'ar', 'country':'US'}
