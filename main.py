@@ -14,9 +14,6 @@ parser.add_argument("-key", "--key", dest="apiKey",
 parser.add_argument("-v", "--verbose", dest="verbose",
                     help="Set verbosity level")
 
-
-
-
 args = parser.parse_args()
 
 if args.apiKey == None:
