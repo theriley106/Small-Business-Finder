@@ -1,30 +1,48 @@
 import json
-#import urllib
-#import urllib.parse
 import requests
 import bs4
 import threading
 import urllib
 import csv
+from argparse import ArgumentParser
+
+parser = ArgumentParser()
+
+parser.add_argument("-key", "--key", dest="apiKey",
+                    help="Input Yelp fusion api key")
+
+parser.add_argument("-v", "--verbose", dest="verbose",
+                    help="Set verbosity level")
+
+
+
+
+args = parser.parse_args()
+
+if args.apiKey == None:
+	apiKey = raw_input("Yelp API Key: ")
+else:
+	apiKey = args.apiKey
 
 headers = {
-'authorization': None,
+'authorization': "Bearer " + apiKey,
 'cache-control': "no-cache",
 }
+
+def log(string):
+	if args.verbose != None:
+		print(string)
 
 def chunks(l, n):
 	for i in xrange(0, len(l), n):
 		yield l[i:i + n]
-
-def set_api_key(apiKey):
-	headers['authorization'] = "Bearer " + apiKey
 
 def get_mobile_site(url):
 	# Gets the mobile site
 	headers = { 'User-Agent' : 'Mozilla/5.0 (iPhone; CPU iPhone OS 9_1 like Mac OS X) AppleWebKit/601.1.46 (KHTML, like Gecko) Version/9.0 Mobile/13B137 Safari/601.1'}
 	for i in range(3):
 		try:
-			res = requests.get(url, headers=headers)
+			res = requests.get(url, headers=headers, timeout=10)
 			if res.status_code == 200:
 				return res
 		except:
@@ -35,7 +53,7 @@ def get_desktop_site(url):
 	headers = {'User-Agent': 'Mozilla/5.0 (Macintosh; Intel Mac OS X 10_10_1) AppleWebKit/537.36 (KHTML, like Gecko) Chrome/39.0.2171.95 Safari/537.36'}
 	for i in range(3):
 		try:
-			res = requests.get(url, headers=headers)
+			res = requests.get(url, headers=headers, timeout=10)
 			if res.status_code == 200:
 				return res
 		except:
@@ -58,7 +76,7 @@ def search(term, threadCount, location, saveAs="file.csv"):
 	#data = res.read()
 	#data = json.loads(data.decode("utf-8"))
 	data = res.json()
-	#print json.dumps(data, indent=4)
+	print json.dumps(data, indent=4)
 	#raw_input("CONTINUE")
 	a = []
 	# Iterate over all of the results for this search
@@ -71,6 +89,7 @@ def search(term, threadCount, location, saveAs="file.csv"):
 
 	def process(listOfResults):
 		for val in listOfResults:
+			print(val)
 			# Replace the URL with a valid mobile URL
 			url = val['url'].replace("https://www.yelp.com", "https://m.yelp.com")
 			# Grab the site using mobile headers | yelp will redirect if not
@@ -109,3 +128,20 @@ def search(term, threadCount, location, saveAs="file.csv"):
 				writer = csv.writer(f)
 				writer.writerows(new)
 	return a
+
+if __name__ == '__main__':
+	print """
+** SMALL BUSINESS FINDER 2.0 **
+\nThis script uses the Yelp fusion API to find
+nearby small businesses with no online presence\n\n
+	"""
+	threads = raw_input("Number of threads [Default 20]: ")
+	search_term = raw_input("Search Term: ")
+	location = raw_input("City: ")
+	state = raw_input("State: ")
+	saveAs = raw_input("CSV Filename [leave blank for stdout only]: ")
+	print("\n\n")
+	if len(saveAs) == 0:
+		search(search_term, int(threads), location + " " + state)
+	else:
+		search(search_term, int(threads), location + " " + state, saveAs)
