@@ -12,3 +12,10 @@ SmallBusinessFinder can be installed from source or from Python's pip package ma
 ``` {.sourceCode .bash}
 $ pip install sbfinder
 ```
+
+or
+
+``` {.sourceCode .bash}
+$ git clone https://github.com/theriley106/SmallBusinessFinder
+$ pip install -r requirements.txt
+```
