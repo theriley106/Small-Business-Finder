@@ -24,7 +24,7 @@ def get_mobile_site(url):
 	headers = { 'User-Agent' : 'Mozilla/5.0 (iPhone; CPU iPhone OS 9_1 like Mac OS X) AppleWebKit/601.1.46 (KHTML, like Gecko) Version/9.0 Mobile/13B137 Safari/601.1'}
 	for i in range(3):
 		try:
-			res = requests.get(url, headers=headers)
+			res = requests.get(url, headers=headers, timeout=10)
 			if res.status_code == 200:
 				return res
 		except:
@@ -35,7 +35,7 @@ def get_desktop_site(url):
 	headers = {'User-Agent': 'Mozilla/5.0 (Macintosh; Intel Mac OS X 10_10_1) AppleWebKit/537.36 (KHTML, like Gecko) Chrome/39.0.2171.95 Safari/537.36'}
 	for i in range(3):
 		try:
-			res = requests.get(url, headers=headers)
+			res = requests.get(url, headers=headers, timeout=10)
 			if res.status_code == 200:
 				return res
 		except:
@@ -58,7 +58,7 @@ def search(term, threadCount, location, saveAs="file.csv"):
 	#data = res.read()
 	#data = json.loads(data.decode("utf-8"))
 	data = res.json()
-	#print json.dumps(data, indent=4)
+	print json.dumps(data, indent=4)
 	#raw_input("CONTINUE")
 	a = []
 	# Iterate over all of the results for this search
@@ -71,6 +71,7 @@ def search(term, threadCount, location, saveAs="file.csv"):
 
 	def process(listOfResults):
 		for val in listOfResults:
+			print(val)
 			# Replace the URL with a valid mobile URL
 			url = val['url'].replace("https://www.yelp.com", "https://m.yelp.com")
 			# Grab the site using mobile headers | yelp will redirect if not
