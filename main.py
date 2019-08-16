@@ -68,10 +68,9 @@ def get_desktop_site(url):
 
 def search(term, threadCount, location, saveAs="file.csv"):
 	params = {'term':term, 'location':location}
-
+	log("Searching: {} in {}".format(term, location))
 	#param_string = urllib.parse.urlencode(params)
 	#conn = http.client.HTTPSConnection("api.yelp.com")
-	x = "address1="
 	#res = requests.get("https://api.yelp.com/v3/businesses/matches/best?", headers=headers, params=params)
 	res = requests.get("https://api.yelp.com/v3/businesses/search", headers=headers, params=params)
 
@@ -79,7 +78,7 @@ def search(term, threadCount, location, saveAs="file.csv"):
 	#data = res.read()
 	#data = json.loads(data.decode("utf-8"))
 	data = res.json()
-	print json.dumps(data, indent=4)
+	log(json.dumps(data, indent=4))
 	#raw_input("CONTINUE")
 	a = []
 	# Iterate over all of the results for this search
@@ -92,7 +91,7 @@ def search(term, threadCount, location, saveAs="file.csv"):
 
 	def process(listOfResults):
 		for val in listOfResults:
-			print(val)
+			log(val)
 			# Replace the URL with a valid mobile URL
 			url = val['url'].replace("https://www.yelp.com", "https://m.yelp.com")
 			# Grab the site using mobile headers | yelp will redirect if not
@@ -113,7 +112,7 @@ def search(term, threadCount, location, saveAs="file.csv"):
 				if len(phone) < 2:
 					phone = "NO PHONE NUMBER"
 				print("{} | {}".format(val['name'],  phone))
-			#print val['website']
+			log("Finished with {}".format(val['website']))
 
 	threads = [threading.Thread(target=process, args=(ar,)) for ar in listOfPins]
 
