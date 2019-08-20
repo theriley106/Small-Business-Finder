@@ -21,3 +21,21 @@ $ pip install -r requirements.txt
 $ python main.py
 Input Yelp API Key:
 ```
+
+### Using the Tool
+
+```{.sourceCode .bash}
+$ sbfinder -key={API_KEY} -v=True
+** SMALL BUSINESS FINDER 2.0 **
+
+This script uses the Yelp fusion API to find
+nearby small businesses with no online presence
+
+
+
+Number of threads [Default 20]: 
+Search Term: 
+City: 
+State: 
+CSV Filename [leave blank for stdout only]: 
+```
