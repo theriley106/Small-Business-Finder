@@ -1,4 +1,4 @@
-#!/usr/bin/env python
+#!/usr/local/opt/python@2/bin/python2.7
 
 import sbfinder
 import sys
@@ -9,14 +9,23 @@ if 'regenerate' in str(sys.argv).lower():
 	elitecode.gen_problems()
 
 parser = argparse.ArgumentParser(description='Description of your program')
-parser.add_argument('--new', help='Signifies the number of new questions returned', required=False, default=2)
-parser.add_argument('--old', help='Signifies the number of old questions returned', required=False, default=1)
-parser.add_argument('--easy', help='Signifies the ratio of questions classified as "Easy" in the problem pool', required=False)
-parser.add_argument('--medium', help='Signifies the ratio of questions classified as "Medium" in the problem pool', required=False)
-parser.add_argument('--hard', help='Signifies the ratio of questions classified as "Hard" in the problem pool', required=False)
-try:
-	args = {k: v for k, v in vars(parser.parse_args()).iteritems() if v is not None}
-except AttributeError:
-	args = {k: v for k, v in vars(parser.parse_args()).items() if v is not None}
+parser.add_argument("-key", "--key", dest="apiKey",
+                    help="Input Yelp fusion api key")
 
-sbfinder.main(args)
+parser.add_argument("-v", "--verbose", dest="verbose",
+                    help="Set verbosity level")
+
+args = parser.parse_args()
+
+if args.apiKey == None:
+	apiKey = raw_input("Yelp API Key: ")
+else:
+	apiKey = args.apiKey
+
+if args.verbose != None:
+	verbose = True
+else:
+	verbose = False
+
+sbfinder.main(apiKey, verbose)
+
