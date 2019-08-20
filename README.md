@@ -25,7 +25,9 @@ Input Yelp API Key:
 ### Using the Tool
 
 ```{.sourceCode .bash}
-$ sbfinder -key={API_KEY} -v=True
+$ sbfinder -key={API_KEY} --verbose=True
+
+
 ** SMALL BUSINESS FINDER 2.0 **
 
 This script uses the Yelp fusion API to find
