@@ -1,8 +1,13 @@
-#!/usr/local/opt/python@2/bin/python2.7
+#!/usr/bin/python
 
 import sbfinder
 import sys
 import argparse
+
+try:
+    input = raw_input
+except NameError:
+    pass
 
 if 'regenerate' in str(sys.argv).lower():
 	print("Regenerating problem set")
