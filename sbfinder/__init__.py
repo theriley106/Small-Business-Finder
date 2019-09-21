@@ -156,6 +156,8 @@ if __name__ == '__main__':
 nearby small businesses with no online presence\n\n
 	"""
 	threads = raw_input("Number of threads [Default 20]: ")
+	if len(threads) == 0:
+		threads = 20
 	search_term = raw_input("Search Term: ")
 	location = raw_input("City: ")
 	state = raw_input("State: ")
