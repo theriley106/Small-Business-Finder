@@ -23,7 +23,7 @@ parser.add_argument("-v", "--verbose", dest="verbose",
 args = parser.parse_args()
 
 if args.apiKey == None:
-	apiKey = raw_input("Yelp API Key: ")
+	apiKey = input("Yelp API Key: ")
 else:
 	apiKey = args.apiKey
 
