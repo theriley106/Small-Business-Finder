@@ -6,6 +6,11 @@ import urllib
 import csv
 from argparse import ArgumentParser
 
+try:
+    input = raw_input
+except NameError:
+    pass
+
 parser = ArgumentParser()
 
 parser.add_argument("-key", "--key", dest="apiKey",
@@ -75,7 +80,7 @@ def search(term, threadCount, location, saveAs="file.csv"):
 	#data = json.loads(data.decode("utf-8"))
 	data = res.json()
 	log(json.dumps(data, indent=4))
-	#raw_input("CONTINUE")
+	#input("CONTINUE")
 	a = []
 	# Iterate over all of the results for this search
 
@@ -130,18 +135,18 @@ def search(term, threadCount, location, saveAs="file.csv"):
 def main(key, verbose):
 	VERBOSE[0] = verbose
 	headers["authorization"] = "Bearer " + key
-	print """
+	print("""
 ** SMALL BUSINESS FINDER 2.0 **
 \nThis script uses the Yelp fusion API to find
 nearby small businesses with no online presence\n\n
-	"""
-	threads = raw_input("Number of threads [Default 20]: ")
+	""")
+	threads = input("Number of threads [Default 20]: ")
 	if len(threads) == 0:
 		threads = 20
-	search_term = raw_input("Search Term: ")
-	location = raw_input("City: ")
-	state = raw_input("State: ")
-	saveAs = raw_input("CSV Filename [leave blank for stdout only]: ")
+	search_term = input("Search Term: ")
+	location = input("City: ")
+	state = input("State: ")
+	saveAs = input("CSV Filename [leave blank for stdout only]: ")
 	print("\n\n")
 	if len(saveAs) == 0:
 		search(search_term, int(threads), location + " " + state)
@@ -150,18 +155,18 @@ nearby small businesses with no online presence\n\n
 
 
 if __name__ == '__main__':
-	print """
+	print("""
 ** SMALL BUSINESS FINDER 2.0 **
 \nThis script uses the Yelp fusion API to find
 nearby small businesses with no online presence\n\n
-	"""
-	threads = raw_input("Number of threads [Default 20]: ")
+	""")
+	threads = input("Number of threads [Default 20]: ")
 	if len(threads) == 0:
 		threads = 20
-	search_term = raw_input("Search Term: ")
-	location = raw_input("City: ")
-	state = raw_input("State: ")
-	saveAs = raw_input("CSV Filename [leave blank for stdout only]: ")
+	search_term = input("Search Term: ")
+	location = input("City: ")
+	state = input("State: ")
+	saveAs = input("CSV Filename [leave blank for stdout only]: ")
 	print("\n\n")
 	if len(saveAs) == 0:
 		search(search_term, int(threads), location + " " + state)
