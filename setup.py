@@ -11,5 +11,5 @@ setup(name='sbfinder',
       url='https://github.com/theriley106/SmallBusinessFinder',
       license='MIT',
       packages=['sbfinder'],
-      install_requires=['requests']
+      install_requires=['requests', 'bs4', 'lxml', 'urllib']
      )
