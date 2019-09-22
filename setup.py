@@ -4,7 +4,7 @@ from distutils.core import setup
 
 setup(name='sbfinder',
 		scripts=['bin/sbfinder'],
-      version='2.2',
+      version='2.3',
       description='Using the Yelp Fusion API to Find Local Businesses Without an Online Presense',
       author='Christopher Lambert',
       author_email='lambertcr@outlook.com',

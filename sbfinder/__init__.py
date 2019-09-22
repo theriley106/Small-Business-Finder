@@ -130,7 +130,7 @@ def search(term, threadCount, location, saveAs="file.csv"):
 			new = [g]
 			for val in a:
 				new.append([val.get(v, "") for v in g])
-			with open(saveAs, "wb") as f:
+			with open(saveAs, "w") as f:
 				writer = csv.writer(f)
 				writer.writerows(new)
 	return a
