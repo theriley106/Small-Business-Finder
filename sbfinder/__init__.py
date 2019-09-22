@@ -2,7 +2,10 @@ import json
 import requests
 import bs4
 import threading
-import urllib
+try:
+	from urllib import unquote
+except:
+	from urllib.parse import unquote
 import csv
 from argparse import ArgumentParser
 
@@ -105,7 +108,7 @@ def search(term, threadCount, location, saveAs="file.csv"):
 			if len(buttonInfo) == 0:
 				val['website'] = None
 			else:
-				val['website'] = urllib.unquote(str(buttonInfo).partition('" href="')[2].partition('"')[0]).partition('&amp')[0].partition('?url=')[2]
+				val['website'] = unquote(str(buttonInfo).partition('" href="')[2].partition('"')[0]).partition('&amp')[0].partition('?url=')[2]
 			a.append(val)
 			#print val.keys()
 			if val['hasWebsite'] == False:
